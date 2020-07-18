@@ -1,0 +1,34 @@
+{
+  "name": "balcora-bot",
+  "version": "0.0.1",
+  "description": "Discord bot for quickly fetching HWRM data",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Novaras/balcora-bot.git"
+  },
+  "keywords": [
+    "Homeworld",
+    "Discord",
+    "Balcora",
+    "CLI",
+    "Data",
+    "Reference"
+  ],
+  "author": "Novaras",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Novaras/balcora-bot/issues"
+  },
+  "homepage": "https://github.com/Novaras/balcora-bot#readme",
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^14.0.23",
+    "@types/ws": "^7.2.6",
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0"
+  }
+}
