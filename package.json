@@ -4,7 +4,11 @@
   "description": "Discord bot for quickly fetching HWRM data",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm install && tsc",
+    "rebuild": "rm -rf ./node_modules && npm run build",
+    "quickstart": "node ./main.js",
+    "qs": "npm run quickstart",
+    "start": "npm run rebuild && npm run quickstart"
   },
   "repository": {
     "type": "git",
@@ -12,6 +16,7 @@
   },
   "keywords": [
     "Homeworld",
+    "Homeworld Remastered",
     "Discord",
     "Balcora",
     "CLI",
