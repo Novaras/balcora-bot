@@ -6,9 +6,9 @@
   "scripts": {
     "build": "npm install && tsc",
     "rebuild": "rm -rf ./node_modules && npm run build",
-    "quickstart": "node ./main.js",
+    "quickstart": "node ./main.js --trace-warnings",
     "qs": "npm run quickstart",
-    "start": "npm run rebuild && npm run quickstart"
+    "start": "npm run build && npm run quickstart"
   },
   "repository": {
     "type": "git",
@@ -31,9 +31,13 @@
   "homepage": "https://github.com/Novaras/balcora-bot#readme",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
+    "@types/mongodb": "^3.5.25",
     "@types/node": "^14.0.23",
+    "@types/node-fetch": "^2.5.7",
     "@types/ws": "^7.2.6",
     "discord.js": "^12.2.0",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.5.9",
+    "node-fetch": "^2.6.1"
   }
 }
