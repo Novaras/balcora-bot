@@ -1,8 +1,9 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, NewsChannel, TextChannel } from 'discord.js';
 import fetchInfo from './fetch-info';
 import { resolveArg, resolveFlag } from './args';
 import { prettyPrintObj, toCodeBlock } from './formatting';
-import { URL, URLSearchParams } from 'url';
+import logger from './logger';
+import ModelType from './models/model_types';
 
 const isBotCommand = (msg_content: string) => {
 	const prepend = msg_content.slice(0, 3);
@@ -18,13 +19,8 @@ const dispatchCommand = async (msg: Message, cmd_type: string, args: { [key: str
 			if (!args.type || !args.name) {
 				return undefined;
 			}
-			const {data, others, url} = await fetchInfo({ type: args.type, name: args.name, verbose: (flags?.verbose || flags?.raw) });
+			const {data, others, url} = await fetchInfo({ type: args.type as ModelType, name: args.name, verbose: (flags?.verbose || flags?.raw) });
 			if (data && url) {
-				console.log(`the data:`);
-				console.log(data);
-				console.log(`verbose?: ${flags?.verbose}`);
-				console.log(`raw?: ${flags?.raw}`);
-
 				const balcora_gate_url = `${process.env.BALCORA_REF_LINK!}?name=${args.name}&type=${args.type}`;
 
 				// hacky, pls refactor
@@ -83,27 +79,25 @@ const dispatchCommand = async (msg: Message, cmd_type: string, args: { [key: str
 
 export default async (msg: Message) => {
 	const content = msg.content;
-	const username = msg.author.username;
-	console.log(`${username}: ${content}`);
+
 	if (isBotCommand(content)) {
-		console.group(`COMMAND:`);
 		const [ type, ...payload ] = [...content.matchAll(/^bb\s+(.+)/gm)][0][1].split(/\s+/gm); // split into cmd type | payload
-		console.log(type);
-		console.log(payload);
+		logger.verbose(type);
+		logger.verbose(payload);
 		const { args } = payload.reduce((acc: { [key: string]: any }, word: string) => {
-			console.log(`word: ${word}`);
-			console.log(`regex: ${/^-\w+/gm.test(word)}`);
+			logger.verbose(`word: ${word}`);
+			logger.verbose(`regex: ${/^-\w+/gm.test(word)}`);
 			if (word.length > 1 && /^-\w+/gm.test(word)) { // word beginning with '-' is an arg
 				const raw = word.slice(1);
 				const parsed = resolveArg(raw);
-				console.log(`word is arg: (${raw} -> ${parsed})`);
+				logger.verbose(`word is arg: (${raw} -> ${parsed})`);
 				acc.args[parsed] = null;
 				acc.last.key = parsed;
 			} else if (acc.last.key !== null) { // words after arg words are values
 				acc.args[acc.last.key] = word;
 				acc.last.key = null;
 			}
-			console.log(acc);
+			logger.verbose(acc);
 			return acc;
 		}, {
 			last: {
@@ -111,27 +105,26 @@ export default async (msg: Message) => {
 			},
 			args: {}
 		});
-		console.log(`args:`);
-		console.log(args);
+		logger.verbose(`args:`);
+		logger.verbose(args);
 
 		const { flags } = payload.reduce((acc: { [key: string]: any }, word: string) => {
-			console.log(word);
+			logger.verbose(word);
 			const pattern = /^--\w+/gm;
 			if (word.length > 2 && pattern.test(word)) {
 				const raw = word.slice(2);
 				const parsed = resolveFlag(raw);
-				console.log(`word is flag: (${raw} -> ${parsed})`);
+				logger.verbose(`word is flag: (${raw} -> ${parsed})`);
 				acc.flags[parsed] = true;
 			}
 			return acc;
 		}, {
 			flags: {},
 		});
-		console.log(`flags:`);
-		console.log(flags);
-		console.groupEnd();
+		logger.verbose(`flags:`);
+		logger.verbose(flags);
 
-		console.log(`router success`);
+		logger.verbose(`router success`);
 		return dispatchCommand(msg, type, args, flags);
 	}
 	return undefined;

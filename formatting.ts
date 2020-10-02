@@ -4,6 +4,9 @@ export const prettyPrintObj = (obj: {[key: string]: any}): string => {
 	const cb_delim = '```';
 	const _prettify = (o: {[key: string]: any}, indent_lvl: number = 0): string => {
 		return Object.entries(o).reduce((acc, [k, v]) => {
+			if (typeof v === `undefined` || v === null || v === undefined) {
+				v = `<none>`;
+			} 
 			if (typeof v === 'object') {
 				v = _prettify(v, indent_lvl + 1);
 			} else if (v instanceof Array) {

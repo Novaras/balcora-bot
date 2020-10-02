@@ -3,7 +3,7 @@ export enum WepnTarget { SELF = `Self`, ENEMY = `Enemy` };
 export enum WepnEffectType { INSTANTHIT = `InstantHit`, BULLET = `Bullet`, MISSILE = `Missile`, MINE = `Mine`, SPHEREBURST = `SphereBurst` };
 export enum WepnType { FIXED = `Fixed`, GIMBLE = `Gimble`, ANIMATEDTURRET = `AnimatedTurret` };
 
-export type Wepn = {
+type TerseWepn = {
 	name: string,
 	effect: WepnEffect,
 	effect_target: WepnTarget,
@@ -15,6 +15,7 @@ export type Wepn = {
 	shots_per_second: number,
 	spawn_effect: string,
 };
+export default TerseWepn;
 
 export const calcShotsPerSecond = (wepn_config: { [key: string]: any }): number => {
 	const fire_burst_duration = parseFloat(wepn_config.fire_burst_duration);
